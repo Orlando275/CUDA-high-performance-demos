@@ -134,7 +134,7 @@ int main()
 
     CHECK_CUDA(cudaMemcpy(arrResult, D_Result, N*sizeof(float), cudaMemcpyDeviceToHost));
 
-    for (int i = 0; i < N; i++)
+    for (int i = N-3; i < N; i++)
     {
         std::cout << arrResult[i] << "\n";
     }
