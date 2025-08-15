@@ -134,12 +134,12 @@ int main()
 
     CHECK_CUDA(cudaMemcpy(arrResult, D_Result, N*sizeof(float), cudaMemcpyDeviceToHost));
 
-    for (int i = 0; i < N; i++)
+    for (int i = N-3; i < N; i++)
     {
         std::cout << arrResult[i] << "\n";
     }
-    std::cout<<time1<<"tiempo 1\n";
-    std::cout<<time2<<"tiempo 2\n";
+    std::cout << time1 << " ms (block-level reduction)\n";
+    std::cout << time2 << " ms (final reduction)\n";
     CHECK_CUDA(cudaFree(D_A));
     CHECK_CUDA(cudaFree(D_S));
     CHECK_CUDA(cudaFree(D_Result));
