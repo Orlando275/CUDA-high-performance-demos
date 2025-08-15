@@ -93,6 +93,11 @@ CUDA-high-performance-demos/
 ---
 
 ## 🖼️ Screenshots
+### SH_normalize_vector – 10,000,000 elementos
+![SH_normalize_vector 10M](https://github.com/user-attachments/assets/899b3e62-77a3-47de-bb52-28a66d999790)
+
+### SH_normalize_vector – 1,000,000 elementos
+![SH_normalize_vector 1M](https://github.com/user-attachments/assets/3120d5a7-f71f-418b-a5da-bb77b70207c2)
 
 ---
 
