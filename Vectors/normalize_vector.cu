@@ -138,8 +138,8 @@ int main()
     {
         std::cout << arrResult[i] << "\n";
     }
-    std::cout<<time1<<"tiempo 1\n";
-    std::cout<<time2<<"tiempo 2\n";
+    std::cout << time1 << " ms (block-level reduction)\n";
+    std::cout << time2 << " ms (final reduction)\n";
     CHECK_CUDA(cudaFree(D_A));
     CHECK_CUDA(cudaFree(D_S));
     CHECK_CUDA(cudaFree(D_Result));
