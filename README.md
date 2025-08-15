@@ -37,8 +37,8 @@ cd CUDA-high-performance-demos
 You can pull and run the latest version of the CUDA-high-performance-demos from Docker Hub:
 
 ```bash
-docker pull orlando2705/tictactoeai:latest
-docker run -it --rm orlando2705/tictactoeai:latest
+docker pull orlando2705/cuda-high-perf-demos:latest
+docker run --rm --gpus all orlando2705/cuda-high-perf-demos:latest
 ```
 ---
 
