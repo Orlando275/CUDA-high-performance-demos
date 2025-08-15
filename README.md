@@ -1,58 +1,77 @@
 <!-- Banner -->
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&height=100&section=header&text=CUDA-high-performance-demos&fontSize=40&animation=fadeIn" />
+  <img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&height=100&section=header&text=CUDA%20High-Performance%20Demos&fontSize=40&animation=fadeIn" />
 </p>
 
 ## 🎯 Project Overview
-**CUDA-high-performance-demos** is a Python-based game where you can:
-- Play **Player vs Player** Tic-Tac-Toe.
-- **Save match history** for later analysis.
-- **Train a custom AI model** to improve over time based on past games.
 
-This project is designed to showcase **game logic implementation**, **data persistence**, and **basic AI training workflows** — all in a simple, interactive environment.
+**CUDA High-Performance Demos** is a collection of CUDA‐accelerated vector and matrix routines showcasing advanced optimization techniques:
+
+- Shared memory tiling for coalesced global loads  
+- Warp‐level optimization to minimize divergence  
+- Tiling strategies to maximize data reuse and throughput  
+
+Each demo comes in a baseline version and a shared‐memory‐optimized (`SH_`) variant, so you can compare performance gains side by side.
 
 ---
 
 ## 📥 Installation & Setup
 
-### Clone this repository
-```bash
-git clone https://github.com/Orlando275/CUDA-high-performance-demos
-```
+### 1. Prerequisites
 
-### Activate virtual enviroment python 
-```bash
-# On Linux / Mac
-source venv/bin/activate
-# On Windows (PowerShell)
-venv\Scripts\Activate.ps1
-```
+- NVIDIA GPU with Compute Capability ≥ 5.0  
+- CUDA Toolkit (≥ 10.0) installed and in your `PATH`  
+- Docker installation
 
-### Start playing
+### 2. Clone this repository
+
 ```bash
-cd game
-python -m game.play_tic_tac_toe
+git clone https://github.com/Orlando275/CUDA-high-performance-demos.git
+cd CUDA-high-performance-demos
 ```
 
 ---
 
 ## 🐳 Docker Image
 
-You can pull and run the latest version of the TicTacToe AI from Docker Hub:
+You can pull and run the latest version of the CUDA-high-performance-demos from Docker Hub:
 
 ```bash
 docker pull orlando2705/tictactoeai:latest
 docker run -it --rm orlando2705/tictactoeai:latest
 ```
+---
+
+## 🏃 How to Run
+
+
+### Example: matrix multiplication (Shared Memory)
+```bash
+nvcc SH_matrix_multiplication.cu -o matrix_multiplication 
+./matrix_multiplication
+```
+
+### Example imput
+```bash
+200  20  120    # M x N, N x P
+```
+
+### Example: vector sum
+```bash
+./sum_of_vectors
+10000000
+./SH_total_vector_sum
+10000000
+```
 
 ---
 
 ## ✨ Features
-- 👫 **PvP Mode** – Play with a friend on the same machine.
-- 💾 **Match History Saving** – Every game is stored for future analysis and training.
-- 🧠 **AI Training Module** – The AI improves by learning from stored games.
-- 🎯 **Replay & Analysis** – Inspect past games to understand AI decisions.
-- 🔄 **Modular Design** – Easy to expand with new features or game variations.
+
+- **SH_ variants** use shared memory tiling to reduce global memory traffic.  
+- **Warp‐level primitives** for fast reductions and minimized divergence.  
+- **Parameterizable block/grid sizes** for auto‐tuning.  
+- **Side‐by‐side** baseline vs. optimized implementations for performance comparison.  
 
 ---
 
@@ -75,34 +94,29 @@ CUDA-high-performance-demos/
 
 ## 🖼️ Screenshots
 
-### Game in progress
-![Game in progress](https://github.com/user-attachments/assets/8328278b-aadf-4180-bfe7-40198af31f34)
-
-### Game end screen
-![Game end screen](https://github.com/user-attachments/assets/e291aed6-b898-4ec7-becd-a5bccb8e4610)
-
-### AI training output
-![AI training output](https://github.com/user-attachments/assets/4f65e74b-eb56-4688-981a-85f42d4b03f3)
-
 ---
 
-## 🎯 How It Works
+## 🚀 How It Works
 
-- **Game Execution**: The game launches from `main.py` and prompts for Player 1 and Player 2 moves.
-- **Data Storage**: Every move and match result is saved in `/data` as a structured file for training.
-- **AI Training**: The saved game moves are used to train the AI, improving its decision-making abilities.
-- **Real-Time Inference**: The game uses a previously trained model to make predictions and play in real time.
+- **Baseline Execution**: Runs kernels that read and write directly from global memory without shared memory usage.  
+- **Shared Memory Tiling**: Optimized versions split data into tiles stored in shared memory, processed cooperatively by threads, then written back to global memory.  
+- **Warp-Level Optimization**: Uses warp-level primitives like `__shfl_down_sync` to perform fast intra‑warp reductions without shared memory.  
+- **Performance Comparison**: Each demo includes both baseline and optimized versions to measure execution time, throughput, and the impact of shared memory and warp-level operations.  
+- **Automatic Timing**: All runs use CUDA events for accurate performance measurement.
 
 ## 🛠 Technologies Used
-- Python 3
-- Framework Pytorch
-- JSON – Data persistence
-- Basic Machine Learning concepts – Custom AI training loop
+
+- **CUDA C/C++** – Core language for implementing high‑performance GPU kernels.  
+- **NVIDIA CUDA Toolkit** – Provides compiler (`nvcc`), runtime libraries, and development utilities.  
+- **Shared Memory & Warp-Level Primitives** – GPU optimization techniques for reduced latency and higher throughput.  
+- **CUDA Events** – For precise kernel execution timing and performance measurement.  
+- **Docker** – Containerization for consistent, portable builds and environment setup across systems.
 
 ## 🚀 Future Improvements
-- Add AI vs Player mode in real-time
-- Implement a Tkinter interface 
-- Visualize AI decision-making with heatmaps
-- Add Docker support for easy deployment
+- Optimize kernels using **LLVM** and custom **PTX** tuning for low‑level performance gains.  
+- Implement **multi‑GPU synchronization** and collective operations via **NVIDIA NCCL** for distributed execution.  
+- Add support for advanced AI‑related kernels such as **softmax** and common **loss functions** (e.g., cross‑entropy, MSE).  
+- Extend profiling and benchmarking suite to measure scalability across multiple GPUs.  
+- Provide **Docker** setup for reproducible, portable GPU development environments.  
 
 ---
