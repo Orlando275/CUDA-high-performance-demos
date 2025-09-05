@@ -90,8 +90,7 @@ __global__ void sum_total (int* arrA, int *result,int N){
 
 
 int main(){
-    int N;
-    cin>>N;
+    int N = 2<<24;
     int* arrA=new int[N];
     int arrR=0;
     for (int i = 0; i < N; i++)
@@ -102,15 +101,16 @@ int main(){
     int* D_R;
     int* D_Result;
 
-    int blockSize=128;
+    int blockSize=32*22;
     int numBlock = (N+blockSize-1) / blockSize;
 
     CHECK_CUDA(cudaMalloc((void**)&D_A,N*sizeof(int)));
-   CHECK_CUDA(cudaMalloc((void**)&D_R,numBlock*sizeof(int)));
+    CHECK_CUDA(cudaMalloc((void**)&D_R,numBlock*sizeof(int)));
     CHECK_CUDA(cudaMalloc((void**)&D_Result,sizeof(int)));
 
     CHECK_CUDA(cudaMemcpy(D_A,arrA,N*sizeof(int),cudaMemcpyHostToDevice));
-    
+
+
 
     
     sum_parcial<<<numBlock,blockSize,blockSize*sizeof(int)>>>(D_A,D_R,N);
@@ -124,7 +124,6 @@ int main(){
 
  
     CHECK_CUDA(cudaMemcpy(&arrR,D_Result,sizeof(int),cudaMemcpyDeviceToHost));
-    cout<<"el resultado de n veces es "<<arrR<<"\n";
     CHECK_CUDA(cudaFree(D_A));
     CHECK_CUDA(cudaFree(D_R));
     delete []arrA;

@@ -85,13 +85,9 @@ __global__ void aplly_Normalize(float *vectorResult, float *vecInit, float raizX
 
 int main()
 {
-    cudaEvent_t start, stop;
-    float time1,time2;
-    CHECK_CUDA(cudaEventCreate(&start));
-    CHECK_CUDA(cudaEventCreate(&stop));
-    int N;
+    int N = 2 << 24;
     float sumCuadrados = 0;
-    std::cin >> N;
+
     float *arrA = new float[N];
     float *arrResult = new float[N];
     for (int i = 0; i < N; i++)
@@ -102,7 +98,7 @@ int main()
     float *D_S;
     float *D_Result;
 
-    int blockSize = 64;
+    int blockSize = 32*32;
     int numBlock = (N + blockSize - 1) / blockSize;
 
     CHECK_CUDA(cudaMalloc((void **)&D_A, N * sizeof(float)));
@@ -110,21 +106,16 @@ int main()
     CHECK_CUDA(cudaMalloc((void **)&D_Result, N * sizeof(float)));
 
     CHECK_CUDA(cudaMemcpy(D_A, arrA, N * sizeof(float), cudaMemcpyHostToDevice));
-    
-    CHECK_CUDA(cudaEventRecord(start));
+
     normalize_Vector_Sharememory<<<numBlock, blockSize, blockSize * sizeof(float)>>>(D_A, D_S, N);
     CHECK_CUDA(cudaDeviceSynchronize());
-    CHECK_CUDA(cudaEventRecord(stop));
-    CHECK_CUDA(cudaEventSynchronize(stop));
-    CHECK_CUDA(cudaEventElapsedTime(&time1,start,stop));
+
 
     int threadsFinal = min(256, numBlock);
-    CHECK_CUDA(cudaEventRecord(start));
+
     result_Total_Parcial_Sum<<<1, threadsFinal, threadsFinal * sizeof(float)>>>(D_S, D_Result, numBlock);
     CHECK_CUDA(cudaDeviceSynchronize());
-    CHECK_CUDA(cudaEventRecord(stop));
-    CHECK_CUDA(cudaEventSynchronize(stop));
-    CHECK_CUDA(cudaEventElapsedTime(&time2,start,stop));
+
 
     CHECK_CUDA(cudaMemcpy(&sumCuadrados, D_Result, sizeof(float), cudaMemcpyDeviceToHost));
     float raizX = sqrt((sumCuadrados));
@@ -134,19 +125,10 @@ int main()
 
     CHECK_CUDA(cudaMemcpy(arrResult, D_Result, N*sizeof(float), cudaMemcpyDeviceToHost));
 
-    for (int i = N-3; i < N; i++)
-    {
-        std::cout << arrResult[i] << "\n";
-    }
-    std::cout << time1 << " ms (block-level reduction)\n";
-    std::cout << time2 << " ms (final reduction)\n";
     CHECK_CUDA(cudaFree(D_A));
     CHECK_CUDA(cudaFree(D_S));
     CHECK_CUDA(cudaFree(D_Result));
     delete[] arrA;
     delete[] arrResult;
-
-    CHECK_CUDA(cudaEventDestroy(start));
-    CHECK_CUDA(cudaEventDestroy(stop));
     return 0;
 }

@@ -81,8 +81,7 @@ __global__ void apply_normalize(float* result, float* vec, float norm, int N) {
 }
 
 int main() {
-    int N;
-    std::cin >> N;
+    int N = 2 << 24;
 
     float* h_vec = new float[N];
     float* h_result = new float[N];
@@ -94,7 +93,7 @@ int main() {
     CHECK_CUDA(cudaMalloc(&d_vec, N * sizeof(float)));
     CHECK_CUDA(cudaMalloc(&d_result, N * sizeof(float)));
 
-    int blockSize = 256;
+    int blockSize = 32*32;
     int numBlocks = (N + blockSize - 1) / blockSize;
 
     CHECK_CUDA(cudaMalloc(&d_partial_sums, numBlocks * sizeof(float)));
@@ -119,10 +118,6 @@ int main() {
     CHECK_CUDA(cudaDeviceSynchronize());
 
     CHECK_CUDA(cudaMemcpy(h_result, d_result, N * sizeof(float), cudaMemcpyDeviceToHost));
-
-    for (int i = 0; i < N; i++) {
-        std::cout << h_result[i] << "\n";
-    }
 
     delete[] h_vec;
     delete[] h_result;
