@@ -1,21 +1,14 @@
-<!-- Banner -->
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&height=100&section=header&text=CUDA%20High-Performance%20Demos&fontSize=40&animation=fadeIn" />
-</p>
+## Project Overview
 
-## 🎯 Project Overview
-
-**CUDA High-Performance Demos** is a collection of CUDA‐accelerated vector and matrix routines showcasing advanced optimization techniques:
+**CUDA High-Performance Demos** is a collection of CUDA‐accelerated vector and matrix routines showcasing advanced optimization with these techniques:
 
 - Shared memory tiling for coalesced global loads  
 - Warp‐level optimization to minimize divergence  
 - Tiling strategies to maximize data reuse and throughput  
 
-Each demo comes in a baseline version and a shared‐memory‐optimized (`SH_`) variant, so you can compare performance gains side by side.
-
 ---
 
-## 📥 Installation & Setup
+## Installation
 
 ### 1. Prerequisites
 
@@ -32,7 +25,7 @@ cd CUDA-high-performance-demos
 
 ---
 
-## 🐳 Docker Image
+## Docker Image
 
 You can pull and run the latest version of the CUDA-high-performance-demos from Docker Hub:
 
@@ -42,7 +35,7 @@ docker run --rm --gpus all orlando2705/cuda-high-perf-demos:v1.1
 ```
 ---
 
-## 🏃 How to Run
+## How to Run
 
 
 ### Example: matrix multiplication (Shared Memory)
@@ -66,16 +59,14 @@ nvcc SH_matrix_multiplication.cu -o matrix_multiplication
 
 ---
 
-## ✨ Features
+## Features
 
 - **SH_ variants** use shared memory tiling to reduce global memory traffic.  
-- **Warp‐level primitives** for fast reductions and minimized divergence.  
-- **Parameterizable block/grid sizes** for auto‐tuning.  
-- **Side‐by‐side** baseline vs. optimized implementations for performance comparison.  
+- **Warp‐level primitives** for fast reductions and minimized divergence.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 <pre>
 CUDA-high-performance-demos/
 ├── Vectors/
@@ -93,9 +84,9 @@ CUDA-high-performance-demos/
 
 ---
 
-## 🚀 GPU Kernel Performance Report
+## GPU Kernel Performance Report
 
-### 1️⃣ Vector Addition – Naive Implementation
+### 1. Vector Addition (naive Implementation)
 - **Input size:** `33,554,432` elements  
 - **Kernel time:** `54.28 ms`  
 - **Description:**  
@@ -105,30 +96,28 @@ CUDA-high-performance-demos/
 
 ---
 
-### 2️⃣ Vector Addition – Optimized with Grid-Stride Loop
+### 2. Vector Addition (Optimized Version).
 
 - **Input size:** `33,554,432` elements  
 - **Kernel time:** `1.61 ms`  
-- **Description:**  
-  Using the **grid-stride loop** pattern, each thread handles multiple elements.  
+- **Description:**    
   This drastically improves resource utilization and reduces execution time by **~34×** compared to the naive version.
 ![sum of vectors with optimization ](https://github.com/user-attachments/assets/08de80a8-e59a-4b0e-976a-2d7000e4694e)
 
 ---
 
-### 3️⃣ Vector Normalization – Shared Memory + Warp-Level Optimization
+### 3. Vector Normalization (Shared Memory and Warp-Level Optimization)
 
 - **Input size:** `33,554,432` elements  
 - **Kernel time (all stages):** `2.98 ms`  
 - **Description:**  
   - Uses **binary reduction** in shared memory to accumulate partial sums.  
   - Applies **warp shuffle intrinsics** (`__shfl_down_sync`) for efficient intra-warp reduction.  
-  - Demonstrates how combining **shared memory** and **warp-level primitives** results in high-performance kernels for reduction-type operations.
 ![ Normalize Vector with Shared Memory](https://github.com/user-attachments/assets/dc5d86bd-39cd-474c-b71a-e3fb7812c04b)
 
 ---
 
-## 📊 Performance Comparison
+## Performance Comparison
 
 | Implementation                                           | Input Size     | Kernel Time | Speedup vs Naive |
 |----------------------------------------------------------|---------------:|------------:|-----------------:|
@@ -138,33 +127,12 @@ CUDA-high-performance-demos/
 
 ---
 
-### 💡 Key Takeaways:
-- **Grid-stride loops** are a simple yet powerful optimization for memory-bound kernels.
-- **Shared memory + warp-level primitives** are essential for high-performance reductions.
-- Even with the same input size, kernel design can yield **orders of magnitude** performance differences.
-
----
-
-## 🚀 How It Works
+## What did I do
 
 - **Baseline Execution**: Runs kernels that read and write directly from global memory without shared memory usage.  
 - **Shared Memory Tiling**: Optimized versions split data into tiles stored in shared memory, processed cooperatively by threads, then written back to global memory.  
 - **Warp-Level Optimization**: Uses warp-level primitives like `__shfl_down_sync` to perform fast intra‑warp reductions without shared memory.  
 - **Performance Comparison**: Each demo includes both baseline and optimized versions to measure execution time, throughput, and the impact of shared memory and warp-level operations.  
 
-## 🛠 Technologies Used
-
-- **CUDA C/C++** – Core language for implementing high‑performance GPU kernels.  
-- **NVIDIA CUDA Toolkit** – Provides compiler (`nvcc`), runtime libraries, and development utilities.  
-- **Shared Memory & Warp-Level Primitives** – GPU optimization techniques for reduced latency and higher throughput.  
-- **CUDA Events** – For precise kernel execution timing and performance measurement.  
-- **Docker** – Containerization for consistent, portable builds and environment setup across systems.
-
-## 🚀 Future Improvements
-- Optimize kernels using **LLVM** and custom **PTX** tuning for low‑level performance gains.  
-- Implement **multi‑GPU synchronization** and collective operations via **NVIDIA NCCL** for distributed execution.  
-- Add support for advanced AI‑related kernels such as **softmax** and common **loss functions** (e.g., cross‑entropy, MSE).  
-- Extend profiling and benchmarking suite to measure scalability across multiple GPUs.  
-- Provide **Docker** setup for reproducible, portable GPU development environments.  
-
----
+## Future Improvements
+- Optimize kernels using **LLVM** and custom **PTX** tuning for low‑level performance gains.
